@@ -4,7 +4,7 @@
 
 * Create `preamble.tex` with the following content.
     ``` latex
-    \documentclass[12pt,crop,tikz]{standalone}
+    \documentclass[10pt,crop,tikz]{standalone}
     \usepackage{tikz-cd}
     \usepackage{amsmath}
     \usepackage{amsfonts}
