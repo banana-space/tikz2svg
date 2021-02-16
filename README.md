@@ -1,5 +1,10 @@
 # tikz2svg
 
+## Prerequisites
+
+* To build and run this project, you need Node.js &geq;14.x.
+* Make sure `pdflatex` and `pdf2svg` are available from the command line.
+
 ## To use
 
 * Create `preamble.tex` with the following content.
