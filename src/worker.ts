@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { spawnSync } from 'child_process';
 import { copyFile, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { parentPort } from 'worker_threads';
 import { WorkerData, WorkerResult } from './WorkerPool';
@@ -65,10 +65,17 @@ function work(data: WorkerData): WorkerResult {
     copyFileSync('preamble.fmt', tempDir + '/preamble.fmt');
     writeFileSync(tempDir + '/temp.tex', '%&preamble\n' + data.code + '\\end{document}');
     writeFileSync(tempDir + '/temp.aux', '');
-    execSync('pdflatex -no-shell-escape -interaction=batchmode temp.tex', { cwd: tempDir });
+
+    spawnSync('pdflatex', ['-no-shell-escape', '-interaction=batchmode', 'temp.tex'], {
+      cwd: tempDir,
+      timeout: 5000,
+    });
 
     if (existsSync(tempDir + '/temp.pdf')) {
-      execSync('pdf2svg temp.pdf temp.svg', { cwd: tempDir });
+      spawnSync('pdf2svg', ['temp.pdf', 'temp.svg'], {
+        cwd: tempDir,
+        timeout: 3000,
+      });
       svg = readFileSync(tempDir + '/temp.svg').toString();
 
       copyFileSync(`${tempDir}/temp.svg`, `temp/${today}/${hash}.svg`);

@@ -1,4 +1,5 @@
 import { Worker } from 'worker_threads';
+import rimraf from 'rimraf';
 
 let taskId = 0;
 let resolvers: { [id: number]: (value: WorkerResult) => void } = { 0: () => {} };
@@ -88,8 +89,10 @@ export class WorkerPool {
         if (worker.queue.length > 0) this.setWorkerTimeout(workerId);
         for (let data of worker.queue) worker.worker.postMessage(data);
         console.log(`[${getTimestamp()}] #${id} Timeout.`);
+
+        rimraf('temp/t' + id, () => {});
       }
-    }, 5000);
+    }, 10000);
 
     function getTimestamp() {
       return new Date().toISOString().replace('T', ' ').substring(0, 19);
